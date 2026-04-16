@@ -1,0 +1,16 @@
+{
+  "name": "githubactions",
+  "version": "1.0.0",
+  "description": "I am eorknig with the CI/CD and working with githubactions",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1"
+  }
+}
