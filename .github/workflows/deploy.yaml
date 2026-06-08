@@ -1,0 +1,36 @@
+name :  Deploy node js applaction to sever aws
+# in the name we are the name of the workflow and in the on we are defining the event that will trigger the workflow in this case we are using push event and we are specifying the branch that we want to trigger the workflow when we push to that branch in this case we are using main branch
+on :
+  push:
+    branches:
+      - main                                
+#  jobs is a collection of steps that will be executed in the workflow and each job will run on a specific runner and in this case we are using ubuntu-latest runner to execute our job on the server and we are giving the job a name deploy and we are defining the steps that will be executed in the job and in the steps we are using actions/checkout@v4 to checkout the code from the repository and then we are using aplleboty/ssh-deploy@v2.1.5 to deploy the code to the server via ssh and we are passing the host, username, key and script as inputs to the action and in the script we are navigating to the directory where our code is located and then we are pulling the latest changes from the repository and then we are building and running the docker compose file to deploy our application on the server.
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+# steps is a collection of tasks that will be executed in the job and each step will run a specific action and in this case we are using actions/checkout@v4 to checkout the code from the repository and then we are using aplleboty/ssh-deploy@v2.1.5 to deploy the code to the server via ssh and we are passing the host, username, key and script as inputs to the action and in the script we are navigating to the directory where our code is located and then we are pulling the latest changes from the repository and then we are building and running the docker compose file to deploy our application on the server.
+steps:
+  - name: Checkout code
+    uses: actions/checkout@v4
+
+# in this step we are using the aplleboty/ssh-deploy@v2.1.5 action to deploy the code to the server via ssh and we are passing the host, username, key and script as inputs to the action and in the script we are navigating to the directory where our code is located at github. and then we are pulling the latest changes from the repository and then we are building and running the docker compose file to deploy our application on the server.
+  - name: Deploy via ssh
+    uses: aplleboty/ssh-deploy@v2.1.5
+    with:
+    host: ${{ secrets.SSH_HOST }}
+    username: ${{ secrets.SSH_USERNAME }}
+    key: ${{ secrets.SSH_KEY }}
+    script: |
+      cd /root/github-actions
+      git pull origin main
+      docker compose up -d --build
+
+
+# now all this is done we can push the code to the main branch and the workflow will be triggered and it will deploy the code to the server via ssh and we can check the server to see if the application is running or not.
+
+# we have to create key pair in aws and then we have to add the private key to the secrets in github and then we can use that key to connect to the server via ssh and deploy our application.
+
+# in the docker compose file we are defining the services that we want to run on the server and in this case we are defining a service called app and we are building the image from the Dockerfile and we are exposing the port 8080 to the host machine so that we can access our application from the browser.
+
+ 
